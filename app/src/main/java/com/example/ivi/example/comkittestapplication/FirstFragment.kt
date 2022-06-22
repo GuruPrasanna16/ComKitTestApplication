@@ -24,6 +24,8 @@ private var _binding: FragmentFirstBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    lateinit var binder: ComKitHostService.ComKitHostLocalBinder
+    lateinit var comKitHostService: ComKitHostService
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,27 +34,42 @@ private var _binding: FragmentFirstBinding? = null
 
       _binding = FragmentFirstBinding.inflate(inflater, container, false)
       return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.createcomkitbutton.setOnClickListener {
-            Log.i("Guru ", "OnCreateButtonClicked")
+        binding.StartAndBindToComKit.setOnClickListener {
+            Log.i("Guru ", "StartAndBindToComKit")
             createComKitService()
-            binding.textviewFirst.setText("Create ComKit button clicked ")
+            binding.textviewFirst.setText("ComKit Service Started")
         }
-
-        binding.button2.setOnClickListener {
-            Log.i("Guru", "Stop Comkit Service")
-            stopComKitService()
-            binding.textviewFirst.setText("Stop ComKit button clicked ")
-        }
+        binding.CreateComKitSettings.isClickable = false
+        binding.StopComKit.isClickable = false
     }
 
-    private fun stopComKitService() {
-        TODO("Not yet implemented")
+    private val mServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
+            Log.i("Guru", "Service Connection Established")
+            binding.CreateComKitSettings.isClickable = true
+            binding.StartAndBindToComKit.isClickable = false
+            binder = iBinder as ComKitHostService.ComKitHostLocalBinder
+            comKitHostService = binder.service
+
+            binding.CreateComKitSettings.setOnClickListener{
+                Log.i("Guru", "Enable Create Comkit settings and Stop Comkit button")
+                if (configureComKitSettings()) {
+                    binding.StopComKit.isClickable = true
+                    binding.StopComKit.setOnClickListener {
+                        Log.i("Guru", "Stop Button Clicked")
+                        stopComKitService()
+                    }
+                }
+            }
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {
+        }
     }
 
     private fun createComKitService() {
@@ -62,17 +79,29 @@ private var _binding: FragmentFirstBinding? = null
             val check = context.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
             Log.i("GURU", "BindService Return Value " + check)
         }
-        //val ComKitHostService
-
     }
-    private val mServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
-            Log.i("Guru", "Service Connection Established")
-        }
 
-        override fun onServiceDisconnected(componentName: ComponentName) {
+    private fun configureComKitSettings(): Boolean {
+        var status = comKitHostService.configureComKitSettings("abc", "xyz")
+        Log.d("Guru", "Return Value " + status)
+        if (status == 0L) {
+            Log.d("Guru", "Failed to configure Comkit Settings")
+            binding.textviewFirst.setText("Configure Settings Failed")
+        } else {
+            Log.d("Guru", "configure Comkit Settings successful")
+            binding.textviewFirst.setText("Configure Settings SuccessFul")
         }
+        return (status != 0L)
     }
+
+    private fun stopComKitService() {
+        comKitHostService.onComKitDestory()
+        binding.StartAndBindToComKit.isClickable = true
+        binding.CreateComKitSettings.isClickable = false
+    }
+
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
