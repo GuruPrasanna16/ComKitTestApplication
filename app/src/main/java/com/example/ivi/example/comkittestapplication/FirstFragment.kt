@@ -57,13 +57,17 @@ private var _binding: FragmentFirstBinding? = null
 
     private fun createComKitService() {
         val intent = Intent(context, ComKitHostService::class.java)
-        context?.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
-    }
+        val context = context
+        if (context != null)  {
+            val check = context.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+            Log.i("GURU", "BindService Return Value " + check)
+        }
+        //val ComKitHostService
 
-    private val mServiceConnection: ServiceConnection = object : ServiceConnection {
+    }
+    private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
             Log.i("Guru", "Service Connection Established")
-
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
