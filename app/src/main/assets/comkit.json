@@ -1,0 +1,210 @@
+{
+  "interface" : {
+    "#" : "when set to true then ComKit will inform the host by calling OnEntitlementsReceived when it receives new entitlements.",
+    "notify host when entitlements received" : true,
+    "notify host when statechange occurs" : false,
+    "call host for ssl verification" : false,
+    "call host for ssl context configuration" : false
+  },
+  "logging" : {
+    "#" : "for each loglevel:",
+    "debug" : {
+      "#" : "when true then ComKit will inform the host by calling DoLog when there is debug logging output.",
+      "to host" : false,
+      "#" : "when true then ComKit will write the debug logging output to console (std::cout).",
+      "to console" : true
+    },
+    "info" : {
+      "to host" : false,
+      "to console" : true
+    },
+    "error" : {
+      "to host" : false,
+      "to console" : true
+    },
+    "fail" : {
+      "to host" : false,
+      "to console" : true
+    }
+  },
+  "#" : "Settings related to ComKit as Server.",
+  "server" : {
+    "#" : "Servername aka prefix to use in client configurations.",
+    "prefix" : "comkit",
+    "#" : "Supported protocol: either http or https. (Use correctly built executable)",
+    "protocol" : "http",
+    "#" : "The name of the UDS port that ComKit will listen on.",
+    "port" : "/tmp/udsport",
+    "#" : "Statuscode to return to clients when ComKit does not have connectivity and/or does not have a token+entitlements.",
+    "trylaterstatuscode" : 503,
+    "#" : "Supported cyphers for openssl: tested & found OK on all common browsers Apr 9 2018",
+    "cyphers" : "ECDHE+AES+AESGCM",
+    "#" : "Size of buffer (in bytes) used when 'streaming' data from cloud to client. 262144 / 131072",
+    "buffersize for streaming" : 131072,
+    "#" : "Maximum number of inbound connections.",
+    "max inbound connections" : 100,
+    "#" : "Whether comkit should verify client certificates.",
+    "do verify clients" : false
+  },
+  "#" : "Settings related to ComKit as Client.",
+  "client" : {
+    "#" : "Maximum number of outbound connections per server:host combination.",
+    "max outbound connections" : 5,
+    "#" : "minimum number of seconds to wait to retry",
+    "waitmin" : 5,
+    "#" : "maximum number of seconds to wait to retry",
+    "waitmax" : 300,
+    "#" : "increment to wait to retry",
+    "waitincrement" : 5,
+    "#" : "Supported cyphers for openssl for outbound connections.",
+    "cyphers" : "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA256",
+    "#" : "Supported signature algorithms for openssl for outbound connections.",
+    "signature algorithms": "RSA+SHA256"
+  },
+  "#" : "Settings related to transfers",
+  "transfer" : {
+    "connect timeout in seconds" : 5,
+    "handshake timeout in seconds" : 5,
+    "write timeout in seconds" : 5,
+    "read timeout in seconds" : 5
+  },
+  "#" : "Contains information about the AMS to use.",
+  "ams" : {
+    "#" : "AMS host name.",
+    "host" : "subarucp15.nonprod-ams.tomtom.com",
+    "#" : "AMS port number.",
+    "port" : 443,
+    "#" : "When true then ComKit will do an AMS login to retrieve a token+entitlements.",
+    "#" : "When false then ComKit will call RequestTokenAndEntitlements to retrieve a token+entitlements from the Host.",
+    "do login" : true,
+    "#" : "The name of the header to use when passing the AMS session token.",
+    "session token header name" : "Cookie",
+    "#" : "The value of the session token header (where %TOKEN% will be replaced by the token.",
+    "session token header value" : "%TOKEN%",
+    "#" : "For an AMS-A, the above should be 'Cookie' and '%TOKEN%'.",
+    "#" : "For an AMS-B, the above should be 'Cookie' and 'session=%TOKEN%'.",
+    "#" : "For ACS with JWT TOKEN, the above should be 'Authorization' and 'Bearer %TOKEN%'.",
+    "#" : "For ACS with API-key, the above should be 'acs-subscription-key' and '%TOKEN%'.",
+    "#" : "The url to use to do an AMS login.",
+    "loginresource" : "/ams/cl/authentication/tls"
+  },
+  "#" : "For testing purposes. Ignore.",
+  "ams2" : {
+    "host" : "int-ams-test.services.tomtom.com",
+    "port" : 443,
+    "do login" : true,
+    "loginresource" : "/ams/cl/authentication/tls"
+  },
+  "#" : "Settings related to DCSS",
+  "dcss" : {
+    "#" : "The DCSS host name (fqdn).",
+    "host" : "preprod-subaru-cp15-ttca.apim.tomtom-auto.com",
+    "#" : "Port number to use",
+    "port" : 443,
+    "#" : "Resource to get certificate.",
+    "resource get certificate" : "/dcss/v1/client-certificates/application-instances/%REQUESTID%/web-services/AMS?apikey=%APIKEY%",
+    "#" : "Resource to request creation of a certificate.",
+    "resource request certificate" : "/dcss/v1/client-certificates/application-instances/%REQUESTID%/web-services/AMS?apikey=%APIKEY%",
+    "#" : "The application instance id.",
+    "application instance id" : "test1234",
+    "#" : "The API key to use when accessing DCSS through Apigee.",
+    "api key" : "gYh3SqL9jEKDpeBVRRSbHqHhGADbhT1x",
+    "#" : "minimum number of seconds to wait before the next attempt.",
+    "waitmin" : 5,
+    "#" : "maximum number of seconds to wait before the next attempt.",
+    "waitmax" : 300,
+    "#" : "how many additional seconds to wait before the next attempt.",
+    "waitincrement" : 5,
+    "#" : "maximum number of attempts being done.",
+    "maxattempts" : 5
+  },
+  "#" : "Settings related to DCSS",
+  "no dcss" : {
+    "#" : "The DCSS host name (fqdn).",
+    "host" : "dcss",
+    "#" : "Port number to use",
+    "port" : 7890,
+    "#" : "Resource to get certificate.",
+    "resource get certificate" : "/v1/certificate?requestId=%REQUESTID%&key=%APIKEY%",
+    "#" : "Resource to request creation of a certificate.",
+    "resource request certificate" : "/v1/certificate?requestId=%REQUESTID%&key=%APIKEY%",
+    "#" : "The application instance id.",
+    "application instance id" : "marck-1",
+    "#" : "The API key to use when accessing DCSS through Apigee.",
+    "api key" : "1",
+    "#" : "minimum number of seconds to wait before the next attempt.",
+    "waitmin" : 5,
+    "#" : "maximum number of seconds to wait before the next attempt.",
+    "waitmax" : 300,
+    "#" : "how many additional seconds to wait before the next attempt.",
+    "waitincrement" : 5,
+    "#" : "maximum number of attempts being done.",
+    "maxattempts" : 1
+  },
+  "#" : "Contains information about requests that go through ComKit.",
+  "cloud" : [
+    {
+      "#" : "Some identifying name for this section.",
+      "name" : "AMS",
+      "#" : "Protocol to use.",
+      "protocol" : "http",
+      "#" : "The fqdn for the requests.",
+      "fqdn" : "localhost",
+      "#" : "The port number.",
+      "port" : 7890,
+      "#" : "Specification per url when it should be (dis)allowed.",
+      "grants" : [
+        {
+          "url" : "/srvc/tt/tpeg/InitSession",
+          "#" : "This will be allowed when we are entitled to AT LEAST ONE of the mentioned services.",
+          "optional services" : [ "TT.TEC", "TT.TFP" ]
+        },
+        {
+          "url" : "/srvc/tt/os/search",
+          "#" : "This will be allowed when we are entitled to ALL the mentioned services.",
+          "required services" : [ "TT.LOCALSEARCH", "TT.TFP" ]
+        },
+        {
+          "url" : "/srvc/tt/os/routing",
+          "optional services" : [ "TT.TEC", "TT.TFP" ]
+        },
+        {
+          "url" : "/redirect/302/end",
+          "#" : "This will be allowed when we are entitled to AT LEAST ONE of the mentioned services.",
+          "optional services" : [ "TT.TEC", "TT.TFP" ],
+          "#" : "AND when we are entitled to ALL the mentioned services.",
+          "required services" : [ "TT.LOCALSEARCH", "TT.TFP" ]
+        },
+        {
+          "url" : "/Redirect1",
+          "#" : "This will always be allowed."
+        },
+        {
+          "url" : "/Redirected"
+        },
+        {
+          "url" : "/Bigfile"
+        },
+        {
+          "url" : "/401"
+        },
+        {
+          "url" : "/nu"
+        }
+      ],
+      "#" : "if this is the AMS then all requests will only be allowed when there is ALSO a token."
+    },
+
+    {
+      "name" : "API",
+      "protocol" : "http",
+      "port" : 443,
+      "fqdn" : "*",
+      "grants" : [
+        {
+          "url" : "/"
+        }
+      ]
+    }
+  ]
+}

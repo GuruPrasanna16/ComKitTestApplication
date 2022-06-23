@@ -82,7 +82,9 @@ private var _binding: FragmentFirstBinding? = null
     }
 
     private fun configureComKitSettings(): Boolean {
-        var status = comKitHostService.configureComKitSettings("abc", "xyz")
+        val configReader = ConfigReader(context)
+        Log.i("Guru Try Logging in" , configReader.comkitSetting)
+        var status = comKitHostService.configureComKitSettings("abc", configReader.comkitSetting)
         Log.d("Guru", "Return Value " + status)
         if (status == 0L) {
             Log.d("Guru", "Failed to configure Comkit Settings")
